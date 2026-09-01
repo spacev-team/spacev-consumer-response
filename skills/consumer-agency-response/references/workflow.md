@@ -8,7 +8,7 @@
 - 채팅에 완성형 답변서 본문을 먼저 쓰는 것 금지
 - DOCX를 만든 뒤 Drive에 올리는 방식 금지
 - **Drive에서 템플릿 검색 금지**
-- `1m3rgfQz_GqcyuijmqmRHKQq_PZKqER4II7A5PylHIqM` 문서 ID를 직접 읽는다.
+- `1slSv_nu58ITcUz07pm-O1EVcSf1n7v7_viQ93cqaxHo` 문서 ID를 직접 읽는다.
 - Google Docs 기준 문서 네이티브 복사 → 복제본 편집만 허용
 - **복제본 ID/URL을 얻은 후에만 답변서 본문을 작성하여 문서에 넣는다.**
 - copy/edit 권한 또는 기능이 없으면 파일 생성 중단. 다른 문서나 채팅 초안으로 우회하지 않는다.

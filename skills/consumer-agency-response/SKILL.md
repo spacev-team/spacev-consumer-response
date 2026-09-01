@@ -25,8 +25,8 @@ Apply `references/native-copy-fidelity-gate.md` before every other workflow step
 사용자가 이 Skill을 호출해 답변서 작성을 요청하면 **사용자의 현재 메시지에 `채팅으로만` 또는 `파일 필요 없음`이 명시된 경우를 제외하고 아래 순서를 절대 바꾸지 않는다.**
 
 1. 결과물을 `native_google_doc`으로 잠근다.
-2. 템플릿을 Drive에서 검색하지 않는다. `references/google-docs-template.md`에 적힌 **고정 문서 ID `1m3rgfQz_GqcyuijmqmRHKQq_PZKqER4II7A5PylHIqM`를 직접 연다.**
-3. 기준 문서의 SpaceV 로고와 고정 구조를 확인한다.
+2. 템플릿을 Drive에서 검색하지 않는다. `references/google-docs-template.md`에 적힌 **고정 문서 ID `1slSv_nu58ITcUz07pm-O1EVcSf1n7v7_viQ93cqaxHo`를 직접 연다.**
+3. 고정 양식 `[답변서] 고정 양식`의 SpaceV 로고와 빈 양식 구조를 확인한다.
 4. **Google Drive의 네이티브 copy로 기준 문서를 복제한다.** 원본을 수정하지 않는다.
 5. **복제본 document ID/URL을 얻기 전에는 답변서 본문을 사용자 채팅에 작성하지 않는다.** 분석·사실정리는 내부적으로만 한다.
 6. 복제본의 기존 문구를 현재 사건 값으로 교체한다. 빈 문서에서 양식을 새로 만들지 않는다.
@@ -164,7 +164,8 @@ Apply `references/native-copy-fidelity-gate.md` before every other workflow step
    - 계약기간/이용상품이 case data와 문자 그대로 일치
    - `2. 민원 내용 및 확인 결과`, `3. 민원 관련 당사 입장 및 조치`가 존재
    - `CS`, 불필요한 보증금, 불필요한 이용대금 세부 구성, `회신일 현재 ~ 확인되지` 문장이 없음
-   - 템플릿 기준 사건의 오염 방지 서명이 하나도 남아 있지 않음
+   - 고정 양식의 필수 빈칸이 현재 사건 값으로 채워져 있음
+   - 과거 사건 답변서의 사실을 템플릿 사실처럼 재사용하지 않음
    - 불필요한 빈 문단/빈 페이지/중복 사실이 없음
 8. 검증이 끝난 **네이티브 Google Docs URL만** 사용자에게 전달한다. 필요하면 `발송 전 검수 완료` 정도의 짧은 메모만 덧붙이고, 답변서 본문은 채팅에 복제하지 않는다.
 
