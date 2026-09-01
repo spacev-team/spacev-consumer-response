@@ -1,0 +1,26 @@
+{
+  "recipient": "OOO",
+  "title": "카드사 민원 회신",
+  "contract_period": "2026-08-17 ~ 2026-08-30 (2주)",
+  "product_name": "테스트",
+  "section2_paragraphs": [
+    "민원인은 결제 취소를 요청하였습니다.",
+    "당사는 관련 기록을 확인하였습니다."
+  ],
+  "section3_paragraphs": [
+    "본 건은 카드사 분쟁 절차에 해당합니다.",
+    "당사는 관련 회신을 준비하겠습니다."
+  ],
+  "content_guard": {
+    "deposit_relevant": false,
+    "payment_breakdown_relevant": false,
+    "evidence_gap_material": false,
+    "risk_detail_level": "brief",
+    "suppress_conditional_landlord_statements": true
+  },
+  "contract_source": {
+    "type": "payment_detail",
+    "confirmed": true,
+    "raw_excerpt": "계약기간\n2026-08-17 ~ 2026-08-30 (2주)\n이용상품\n테스트"
+  }
+}

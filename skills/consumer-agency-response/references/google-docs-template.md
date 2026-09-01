@@ -1,0 +1,72 @@
+# Google Docs 고정 템플릿
+
+## 기준 문서
+
+- 문서 ID: `1m3rgfQz_GqcyuijmqmRHKQq_PZKqER4II7A5PylHIqM`
+- 기준 URL: `https://docs.google.com/document/d/1m3rgfQz_GqcyuijmqmRHKQq_PZKqER4II7A5PylHIqM`
+- 기준 문서 제목: `[답변서]한국여성소비자연합(2026-0472851)_578297`
+
+이 문서는 **양식과 스타일만을 위한 유일한 기준 템플릿**이다. **파일명/키워드로 Drive 검색하지 말고 위 document ID로 직접 접근한다. 검색 결과에서 다른 답변서를 템플릿으로 선택하면 실패다.** 파일 결과는 반드시 이 문서의 네이티브 Google Docs 복제본이어야 하며 Word/DOCX 재구성은 실패로 처리한다. 안에 들어 있는 사건 사실은 절대 재사용하지 않는다. 원본을 직접 수정하지 말고 반드시 네이티브 Google Docs `copy` 기능으로 복제한 뒤 복제본만 편집한다.
+
+## 구조 지문
+
+복제 전후에 아래 구조를 확인한다.
+
+- 단일 탭 문서
+- 우측 상단 SpaceV 로고가 `positionedObject`로 존재
+  - 크기 약 `64.33pt × 19.87pt`
+  - 우측 상단 배치, `BEHIND_TEXT`
+- 상단: 문서번호 → `답 변 서` → 수신인 1열 표 → 제목
+- 본문 고정 순서
+  1. `1. 계약 내용`
+  2. `2. 민원 내용 및 확인 결과`
+  3. `3. 민원 관련 당사 입장 및 조치`
+- 계약 표는 기본 `2행 × 2열`
+  - 1행: 계약기간 / 값
+  - 2행: 이용상품 / 값
+- 하단: 발신일자 / 발신인 / 담당자 / 연락처 / 이메일
+
+## 템플릿 사건 오염 방지 서명
+
+복제본을 완성한 뒤 아래 기준 사건 값이 **하나라도 남아 있으면 실패**로 처리한다.
+
+- `2026082721`
+- `김기순`
+- `2026-07-23 ~ 2026-09-02 (6주)`
+- `레몬하우스`
+- `187,110원`
+- `에어컨`
+- `4~5일분`
+
+## 네이티브 편집 원칙
+
+1. Google Drive/Docs의 네이티브 copy 기능으로 기준 문서를 복제한다.
+2. 원본 기준 문서는 절대 수정하지 않는다.
+3. 복제본에서 현재 인덱스와 표 구조를 다시 읽고 필요한 범위만 교체한다.
+4. 로고, 페이지 크기, 여백, 표 폭, 폰트, 색상, 헤더/푸터 구조를 재작성하지 않는다.
+5. 새 문서를 빈 문서에서 다시 그리거나 DOCX를 생성해서 업로드하지 않는다.
+6. 네이티브 copy 기능을 현재 런타임에서 사용할 수 없다면 **양식을 재구성하지 말고 중단**한다.
+7. 완성 후 Google Docs를 다시 읽어 계약기간·이용상품·제목·수신인·본문이 현재 사건 값과 정확히 일치하는지 검증한다.
+
+
+## 산출물 하드스톱
+
+- 최종 링크의 도메인은 `docs.google.com/document/`이어야 한다.
+- `.docx`, `.doc`, `.pdf` 파일 링크 또는 로컬 다운로드 링크를 반환하면 실패다.
+- Google Drive 앱의 copy/edit 동작이 불가능하면 Word로 대체하지 말고 중단한다.
+- 현재 플러그인은 Google Drive 앱을 필수 앱으로 바인딩한다. 관리자 설정에서 Google Drive와 문서 쓰기 동작이 허용되어야 한다.
+
+
+## 런타임 실행 순서 고정
+
+1. 위 `문서 ID`를 직접 읽는다. Drive 검색은 하지 않는다.
+2. 네이티브 copy를 실행한다.
+3. copy 결과의 새 document ID/URL을 확인한다.
+4. 그 전에는 사용자 채팅에 답변서 본문·Markdown 표·제목을 출력하지 않는다.
+5. 복제본을 편집하고 검증한 뒤 `docs.google.com/document/` 링크만 반환한다.
+6. copy/edit가 불가능하면 다른 산출물로 우회하지 않고 중단한다.
+
+
+## Native-copy fidelity requirement
+
+Before this workflow starts, apply `native-copy-fidelity-gate.md`. Native file copy must succeed and the copied document must pass the structural clone signature before any response prose is drafted. A blank/recreated Google Doc is always a failure.
