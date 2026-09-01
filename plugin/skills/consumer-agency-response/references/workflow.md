@@ -2,12 +2,16 @@
 
 ## 0. 결과물 경로 잠금
 
-파일 생성 요청이면 가장 먼저 결과물을 **네이티브 Google Docs**로 잠근다.
+파일 생성 요청이면 가장 먼저 결과물을 **네이티브 Google Docs**로 잠근다. 이 단계가 본문 초안보다 먼저다.
 
-- Word/DOCX/PDF 생성 금지
+- Word/DOCX/PDF/Markdown 문서 생성 금지
+- 채팅에 완성형 답변서 본문을 먼저 쓰는 것 금지
 - DOCX를 만든 뒤 Drive에 올리는 방식 금지
+- **Drive에서 템플릿 검색 금지**
+- `1m3rgfQz_GqcyuijmqmRHKQq_PZKqER4II7A5PylHIqM` 문서 ID를 직접 읽는다.
 - Google Docs 기준 문서 네이티브 복사 → 복제본 편집만 허용
-- copy/edit 권한 또는 기능이 없으면 파일 생성 중단
+- **복제본 ID/URL을 얻은 후에만 답변서 본문을 작성하여 문서에 넣는다.**
+- copy/edit 권한 또는 기능이 없으면 파일 생성 중단. 다른 문서나 채팅 초안으로 우회하지 않는다.
 - 최종 응답은 Google Docs URL만 반환
 
 ## 1. 입력자료 확인
@@ -165,11 +169,16 @@
 파일 결과는 **네이티브 Google Docs만** 사용한다.
 
 1. `case-data.json`을 만들고 계약정보·금액·관련성·문장 가드를 검증
-2. `references/google-docs-template.md`의 기준 문서에 SpaceV 로고와 고정 구조가 있는지 읽어서 확인
-3. Google Drive 네이티브 copy 기능으로 기준 문서를 복제
+2. Drive 검색 없이 `references/google-docs-template.md`의 고정 document ID를 직접 읽어 SpaceV 로고와 고정 구조를 확인
+3. Google Drive 네이티브 copy 기능으로 기준 문서를 복제하고 **복제본 URL 확보 전에는 사용자 채팅에 본문을 출력하지 않음**
 4. 복제본만 편집하고 원본의 로고·페이지·표·서식 구조는 유지
 5. 현재 사건 값으로 수신인·제목·계약정보·2항·3항·발신정보를 교체
 6. 완성본을 다시 읽어 로고, 2행×2열 계약표, 계약정보 일치, 금지 문장, 템플릿 사건 잔존 여부를 검증
 7. **Google Docs URL만 반환**
 
 DOCX/Word를 생성하거나 업로드하는 fallback은 사용하지 않는다. 네이티브 copy/edit 기능이 없으면 양식을 재작성하지 말고 필요한 Google Drive 권한 또는 기능이 없다고 알린다.
+
+
+## Native-copy fidelity requirement
+
+Before this workflow starts, apply `native-copy-fidelity-gate.md`. Native file copy must succeed and the copied document must pass the structural clone signature before any response prose is drafted. A blank/recreated Google Doc is always a failure.

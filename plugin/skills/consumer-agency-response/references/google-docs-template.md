@@ -6,7 +6,7 @@
 - 기준 URL: `https://docs.google.com/document/d/1m3rgfQz_GqcyuijmqmRHKQq_PZKqER4II7A5PylHIqM`
 - 기준 문서 제목: `[답변서]한국여성소비자연합(2026-0472851)_578297`
 
-이 문서는 **양식과 스타일만을 위한 기준 템플릿**이다. 파일 결과는 반드시 이 문서의 네이티브 Google Docs 복제본이어야 하며 Word/DOCX 재구성은 실패로 처리한다. 안에 들어 있는 사건 사실은 절대 재사용하지 않는다. 원본을 직접 수정하지 말고 반드시 네이티브 Google Docs `copy` 기능으로 복제한 뒤 복제본만 편집한다.
+이 문서는 **양식과 스타일만을 위한 유일한 기준 템플릿**이다. **파일명/키워드로 Drive 검색하지 말고 위 document ID로 직접 접근한다. 검색 결과에서 다른 답변서를 템플릿으로 선택하면 실패다.** 파일 결과는 반드시 이 문서의 네이티브 Google Docs 복제본이어야 하며 Word/DOCX 재구성은 실패로 처리한다. 안에 들어 있는 사건 사실은 절대 재사용하지 않는다. 원본을 직접 수정하지 말고 반드시 네이티브 Google Docs `copy` 기능으로 복제한 뒤 복제본만 편집한다.
 
 ## 구조 지문
 
@@ -55,3 +55,18 @@
 - `.docx`, `.doc`, `.pdf` 파일 링크 또는 로컬 다운로드 링크를 반환하면 실패다.
 - Google Drive 앱의 copy/edit 동작이 불가능하면 Word로 대체하지 말고 중단한다.
 - 현재 플러그인은 Google Drive 앱을 필수 앱으로 바인딩한다. 관리자 설정에서 Google Drive와 문서 쓰기 동작이 허용되어야 한다.
+
+
+## 런타임 실행 순서 고정
+
+1. 위 `문서 ID`를 직접 읽는다. Drive 검색은 하지 않는다.
+2. 네이티브 copy를 실행한다.
+3. copy 결과의 새 document ID/URL을 확인한다.
+4. 그 전에는 사용자 채팅에 답변서 본문·Markdown 표·제목을 출력하지 않는다.
+5. 복제본을 편집하고 검증한 뒤 `docs.google.com/document/` 링크만 반환한다.
+6. copy/edit가 불가능하면 다른 산출물로 우회하지 않고 중단한다.
+
+
+## Native-copy fidelity requirement
+
+Before this workflow starts, apply `native-copy-fidelity-gate.md`. Native file copy must succeed and the copied document must pass the structural clone signature before any response prose is drafted. A blank/recreated Google Doc is always a failure.

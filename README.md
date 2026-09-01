@@ -4,7 +4,7 @@ SpaceV 사내 ChatGPT Plugin 배포용 GitHub Marketplace 저장소입니다.
 
 ## 현재 포함 Plugin
 
-- `spacev-consumer-response` v1.5.0
+- `spacev-consumer-response` v1.5.2
   - 한국소비자원·1372 등 국내 소비자기관 민원 답변서 작성
   - **Google Drive 앱 필수 바인딩**
   - Word/DOCX/PDF를 최종 또는 중간 산출물로 사용하지 않음
@@ -39,3 +39,13 @@ Plugin 수정 시 기본 브랜치에 변경사항을 commit/push한 뒤 관리�
 
 ChatGPT Marketplace는 기본적으로 매일 동기화합니다. 즉시 반영이 필요하면 관리자가
 `Workspace settings > Plugins > Marketplaces > 해당 marketplace > Sync now`를 실행합니다.
+
+
+## v1.5.2 긴급 핫픽스
+
+- Google Drive에서 템플릿을 검색하지 않고 고정 document ID로 직접 접근
+- native copy 성공 및 복제본 URL 확보 전 사용자 채팅에 답변서 본문 출력 금지
+- Markdown/Word/DOCX/PDF fallback 금지
+- 고정 골조: `1. 계약 내용` / `2. 민원 내용 및 확인 결과` / `3. 민원 관련 당사 입장 및 조치`
+- 계약 표 기본 2행: 계약기간 / 이용상품
+- 내부 `CS 지원금` 표현, 불필요한 보증금·금액 세부·미확인 상태·방어 문장 제거

@@ -52,3 +52,8 @@
 - 내부 용어/불필요한 미확인 상태/금액 세부 나열 제거
 - SpaceV 로고 포함 Google Docs 양식 유지
 ```
+
+
+## Native-copy fidelity requirement
+
+Before this workflow starts, apply `native-copy-fidelity-gate.md`. Native file copy must succeed and the copied document must pass the structural clone signature before any response prose is drafted. A blank/recreated Google Doc is always a failure.

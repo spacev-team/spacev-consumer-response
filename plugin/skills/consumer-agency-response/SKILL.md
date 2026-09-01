@@ -3,9 +3,43 @@ name: consumer-agency-response
 description: 한국소비자원, 1372 소비자상담센터 등 국내 소비자기관 민원 자료를 검토하고 스페이스브이 답변서를 작성·검수한다. 공문, 결제 상세 정보, 계약메모 전체를 바탕으로 소비자원 답변서, 1372 회신, 소비자기관 민원 답변서 작성 요청에 사용한다. 카드사·토스페이먼츠 민원, 해외 차지백, 수사기관 공문에는 사용하지 않는다.
 ---
 
+## LAUNCH-BLOCKING FORMAT FIDELITY GATE
+
+Apply `references/native-copy-fidelity-gate.md` before every other workflow step whenever a Google Docs artifact is requested. This gate outranks convenience, drafting, and fallback behavior.
+
+- Attempt native Drive file copy before drafting any answer-letter prose.
+- If native copy is not actually callable in the current runtime, stop. A connected Drive app is not enough.
+- Never create a blank Google Doc and never imitate the canonical template.
+- Never use direct-create, DOCX import, Markdown, chat text, or manual restyling as a substitute for native copy.
+- After copy, prove the destination retained the canonical native structure before writing any case content.
+- After editing, prove the same structure again before returning the link.
+- If the positioned SpaceV logo, fixed table widths, title styling, or footer rule is missing, the output is invalid even when it looks visually similar. Do not return it.
+
+
 # 소비자기관 답변서
 
 국내 소비자기관 민원에 대해 필요한 사실만 골라 담백하게 작성한다. 많이 받은 자료를 많이 쓰는 것이 목표가 아니다. `민원 쟁점 → 실제 경위 → 당사의 중재·조치 → 역할의 한계 → 후속 지원`이 한 번씩만 나오게 한다.
+
+## 긴급 실행 계약 — 다른 모든 지침보다 먼저 적용
+
+사용자가 이 Skill을 호출해 답변서 작성을 요청하면 **사용자의 현재 메시지에 `채팅으로만` 또는 `파일 필요 없음`이 명시된 경우를 제외하고 아래 순서를 절대 바꾸지 않는다.**
+
+1. 결과물을 `native_google_doc`으로 잠근다.
+2. 템플릿을 Drive에서 검색하지 않는다. `references/google-docs-template.md`에 적힌 **고정 문서 ID `1m3rgfQz_GqcyuijmqmRHKQq_PZKqER4II7A5PylHIqM`를 직접 연다.**
+3. 기준 문서의 SpaceV 로고와 고정 구조를 확인한다.
+4. **Google Drive의 네이티브 copy로 기준 문서를 복제한다.** 원본을 수정하지 않는다.
+5. **복제본 document ID/URL을 얻기 전에는 답변서 본문을 사용자 채팅에 작성하지 않는다.** 분석·사실정리는 내부적으로만 한다.
+6. 복제본의 기존 문구를 현재 사건 값으로 교체한다. 빈 문서에서 양식을 새로 만들지 않는다.
+7. 편집 완료 후 다시 읽어 로고·표·섹션·금지문장을 검수한다.
+8. 최종 채팅에는 **검증된 `https://docs.google.com/document/` 링크와 아주 짧은 검수 메모만** 남긴다. 답변서 본문을 채팅에 재출력하지 않는다.
+
+### 실패 시 하드스톱
+
+- 템플릿 검색으로 다른 문서를 고르지 않는다.
+- Word, DOCX, PDF, Markdown 문서, 채팅용 답변서로 대체하지 않는다.
+- 네이티브 copy/edit 기능이나 쓰기 권한이 없으면 다음 한 문장만 안내하고 중단한다.
+  - `Google Docs 고정 양식을 복사·편집할 수 있는 권한 또는 기능을 확인할 수 없어 답변서 생성을 중단합니다.`
+- `# 답 변 서`, Markdown 표, `## 1. 접수 내용` 같은 채팅 문서가 보이면 **완료가 아니라 실패**다.
 
 ## 출력 하드스톱 — 가장 먼저 적용
 
@@ -14,7 +48,7 @@ description: 한국소비자원, 1372 소비자상담센터 등 국내 소비자
 - Word, DOCX, PDF, 로컬 문서 파일을 생성하지 않는다.
 - Documents/DOCX 생성 기능을 중간 단계로도 사용하지 않는다.
 - 반드시 Google Drive/Docs 앱으로 기준 Google Doc을 네이티브 복사한 뒤 복제본만 편집한다.
-- Google Drive/Docs의 복사·편집 기능이 현재 세션에서 불가능하면 **다른 형식으로 우회하지 않는다.** `Google Drive에서 기준 문서를 복사·편집할 수 있는 권한/기능이 필요합니다.`라고 안내하고 중단한다.
+- Google Drive/Docs의 복사·편집 기능이 현재 세션에서 불가능하면 **다른 형식으로 우회하지 않는다.** 위 실패 문구만 안내하고 중단한다.
 - 최종 응답에 첨부파일을 만들지 말고 **검증된 Google Docs URL만 반환**한다.
 
 ## 시작 순서
@@ -24,6 +58,7 @@ description: 한국소비자원, 1372 소비자상담센터 등 국내 소비자
 3. 초안 전에 [writing-standard.md](references/writing-standard.md)의 관련성 필터와 중복 금지 규칙을 적용한다.
 4. 좋은 사례의 구조와 금지 문장 회귀 예시는 [precedent-patterns.md](references/precedent-patterns.md)에서 참고한다.
 5. 파일 생성 전 [qa-checklist.md](references/qa-checklist.md)를 확인한다.
+6. 배포용 강제 실행 문구는 [mandatory-user-command.md](references/mandatory-user-command.md)를 항상 실행 계약으로 적용한다.
 
 ## 입력자료
 
@@ -105,7 +140,7 @@ description: 한국소비자원, 1372 소비자상담센터 등 국내 소비자
 
 ## 결과물
 
-- 사용자가 `채팅으로`, `텍스트로`, `파일 필요 없음`이라고 하면 채팅 텍스트만 제공한다.
+- 사용자의 **현재 메시지에** `채팅으로만` 또는 `파일 필요 없음`이 명시된 경우에만 채팅 텍스트를 허용한다. `채팅에서 사용해 보기`, 플러그인 페이지에서 대화를 연 사실, 일반적인 대화 상황은 텍스트 전용 요청으로 보지 않는다.
 - 그 외에는 **네이티브 Google Docs만 생성한다. DOCX/Word 파일을 만들지 않는다.**
 - [google-docs-template.md](references/google-docs-template.md)의 기준 문서를 반드시 네이티브 Google Docs `copy` 기능으로 복제한 뒤 복제본만 편집한다.
 - 기준 문서 원본을 직접 수정하거나, 빈 Google Doc에서 양식을 재구성하거나, DOCX를 중간 산출물로 만들어 업로드하지 않는다.
@@ -118,8 +153,8 @@ description: 한국소비자원, 1372 소비자상담센터 등 국내 소비자
 ## Google Docs 생성
 
 1. 작성 전 `case-data.json`을 만들고 `scripts/validate_case_data.py case-data.json`을 실행할 수 있으면 실행한다. 실행 환경이 없더라도 같은 검증 규칙을 모델이 직접 적용한다.
-2. [google-docs-template.md](references/google-docs-template.md)의 기준 Google Doc을 읽어 구조 지문과 SpaceV 로고 존재를 확인한다.
-3. 기준 문서를 **네이티브 copy**로 복제한다. 원본은 절대 수정하지 않는다.
+2. Drive 검색을 사용하지 말고 [google-docs-template.md](references/google-docs-template.md)에 적힌 **고정 document ID를 직접 읽어** 구조 지문과 SpaceV 로고 존재를 확인한다.
+3. 기준 문서를 **네이티브 copy**로 복제한다. 원본은 절대 수정하지 않는다. **복제본 ID/URL을 얻기 전에는 사용자에게 답변서 초안이나 Markdown 본문을 출력하지 않는다.**
 4. 복제본의 현재 문서 구조와 표 범위를 다시 읽는다.
 5. 문서번호, 수신인, 제목, 계약기간, 이용상품, 2항 본문, 3항 본문, 발신일자/담당자 등 현재 사건 값만 필요한 범위에서 교체한다.
 6. 계약기간과 이용상품은 `contract_source.raw_excerpt`에서 잠근 문자열을 그대로 넣는다.
@@ -131,7 +166,7 @@ description: 한국소비자원, 1372 소비자상담센터 등 국내 소비자
    - `CS`, 불필요한 보증금, 불필요한 이용대금 세부 구성, `회신일 현재 ~ 확인되지` 문장이 없음
    - 템플릿 기준 사건의 오염 방지 서명이 하나도 남아 있지 않음
    - 불필요한 빈 문단/빈 페이지/중복 사실이 없음
-8. 검증이 끝난 **네이티브 Google Docs URL만** 사용자에게 전달한다.
+8. 검증이 끝난 **네이티브 Google Docs URL만** 사용자에게 전달한다. 필요하면 `발송 전 검수 완료` 정도의 짧은 메모만 덧붙이고, 답변서 본문은 채팅에 복제하지 않는다.
 
 **중요:** 네이티브 copy 기능이 없거나 로고/양식을 보존할 수 없으면 새 문서를 임의로 다시 만들지 않는다. 양식 보존 실패는 완료가 아니다.
 
