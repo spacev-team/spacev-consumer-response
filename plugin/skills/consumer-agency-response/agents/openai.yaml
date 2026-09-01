@@ -1,0 +1,8 @@
+interface:
+  display_name: 삼삼엠투 소비자원 답변서
+  short_description: 소보원·1372 민원 자료를 읽고 고정 Google Docs 양식으로 답변서 작성
+  default_prompt: 공문, 결제 상세 정보, 계약메모 전체를 검토해 계약기간·이용상품을 원문 그대로 반영하고, SpaceV 로고가 있는 고정 Google Docs 템플릿을 복사해 소비자원 답변서를 작성해줘.
+  icon_small: assets/icon.svg
+  icon_large: assets/icon.svg
+policy:
+  allow_implicit_invocation: true
