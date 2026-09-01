@@ -6,9 +6,12 @@ from pathlib import Path
 
 FORBIDDEN_TERMS=("숙소","숙박","플랫폼","게스트","호스트","예약","체크인","체크아웃")
 OUT_OF_SCOPE_TERMS=("카드사","토스페이먼츠","chargeback","pre-arbitration","reason code","issuer rebuttal")
+INTERNAL_JARGON_TERMS=("CS 지원금","CS지원금","CS 보상","CS보상","지결완료")
+STIFF_REFUND_TERMS=("당사가 보관하고 있지 않습니다","임의로 회수하거나","전액 반환을 확정할 수")
 PAYMENT_BREAKDOWN_TERMS=("임대료","관리비","청소비")
 RISK_DETAIL_TERMS=("불법","무단 전대","전대차동의서","사용수익권")
-EVIDENCE_GAP_TERMS=("확인되지 않았","확인되지 않습니다","미확인","제출 완료 여부","자료가 없음","기록이 없음")
+EVIDENCE_GAP_TERMS=("확인되지 않았","확인되지 않습니다","미확인","제출 완료 여부","자료가 없음","기록이 없음","회신일 현재")
+BREAKDOWN_PAREN_PATTERN=re.compile(r"(?:이용대금|이용요금|결제금액)\s*[0-9,]+원\s*\([^)]*(?:임대료|관리비|청소비)[^)]*\)")
 CONDITIONAL_FULL_REFUND_PATTERNS=(
     re.compile(r"전액.{0,12}(?:환불|반환).{0,25}(?:가능|생각|검토|조건)"),
     re.compile(r"(?:민원|신고).{0,25}(?:안|취하|철회).{0,25}(?:전액|환불|반환)"),
@@ -25,9 +28,6 @@ def clean_recipient(value:str)->str:
     for suffix in ("담당자님","담당자"):
         if value.endswith(suffix): value=value[:-len(suffix)].strip()
     return value
-
-def response_body(data:dict)->str:
-    return "\n".join([str(data.get("title","")),*map(str,data.get("section2_paragraphs",[])),*map(str,data.get("section3_paragraphs",[]))])
 
 def validate_contract_source(data:dict)->None:
     source=data.get("contract_source")
@@ -52,9 +52,14 @@ def validate(data:dict)->None:
         if "\n" in text or "\r" in text: raise ValueError("Each JSON paragraph must be one paragraph")
         found=[t for t in FORBIDDEN_TERMS if t in text]
         if found: raise ValueError("Forbidden terminology found: "+", ".join(found))
+    body="\n".join([*map(str,data["section2_paragraphs"]),*map(str,data["section3_paragraphs"])])
     lower="\n".join(body_values).lower()
     found=[t for t in OUT_OF_SCOPE_TERMS if t.lower() in lower]
     if found: raise ValueError("Out-of-scope card/chargeback terminology found: "+", ".join(found))
+    found=[t for t in INTERNAL_JARGON_TERMS if t in body]
+    if found: raise ValueError("Internal CS jargon must not appear in external response: "+", ".join(found))
+    found=[t for t in STIFF_REFUND_TERMS if t in body]
+    if found: raise ValueError("Stiff/defensive refund wording must be softened: "+", ".join(found))
     extras=data.get("additional_contract_rows",[])
     if not isinstance(extras,list) or len(extras)>3: raise ValueError("additional_contract_rows must be a list of at most 3 approved rows")
     if extras and data.get("additional_contract_rows_approved") is not True: raise ValueError("Additional contract rows require explicit user approval")
@@ -62,11 +67,10 @@ def validate(data:dict)->None:
     guard=data.get("content_guard")
     required_guard={"deposit_relevant","payment_breakdown_relevant","evidence_gap_material","risk_detail_level","suppress_conditional_landlord_statements"}
     if not isinstance(guard,dict) or not required_guard.issubset(guard): raise ValueError("content_guard is incomplete")
-    body="\n".join([*map(str,data["section2_paragraphs"]),*map(str,data["section3_paragraphs"])])
     if guard.get("deposit_relevant") is False and "보증금" in body: raise ValueError("Deposit is not relevant")
     if guard.get("payment_breakdown_relevant") is False:
         used=[t for t in PAYMENT_BREAKDOWN_TERMS if t in body]
-        if len(used)>=2 or "구성됩니다" in body: raise ValueError("Payment breakdown is not material")
+        if len(used)>=2 or "구성됩니다" in body or BREAKDOWN_PAREN_PATTERN.search(body): raise ValueError("Payment breakdown is not material")
     if guard.get("evidence_gap_material") is False and any(t in body for t in EVIDENCE_GAP_TERMS): raise ValueError("Non-material evidence-gap narration found")
     if guard.get("risk_detail_level")=="brief" and any(t in body for t in RISK_DETAIL_TERMS): raise ValueError("Risk topic is too detailed")
     if guard.get("suppress_conditional_landlord_statements") is True and any(p.search(body) for p in CONDITIONAL_FULL_REFUND_PATTERNS): raise ValueError("Conditional full-refund statement must be omitted")
@@ -83,7 +87,7 @@ def validate(data:dict)->None:
             if any(p.search(factual) for p in STRONG_LANDLORD_REFUND_PATTERNS): raise ValueError("Landlord refund language is stronger than money_guard status")
     seen=set()
     for text in [*map(str,data["section2_paragraphs"]),*map(str,data["section3_paragraphs"])]:
-        key=re.sub(r"[\s,.;:·()\[\]{}'\"‘’“”]","",text)
+        key=re.sub(r"[\s,.;:·()\[\]{}\"'‘’“”]", "", text)
         if key in seen: raise ValueError("Duplicate response paragraph detected")
         seen.add(key)
 
