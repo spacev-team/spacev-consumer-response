@@ -1,0 +1,12 @@
+소비자원 답변서 Plugin v1.5.0 업데이트를 GitHub에 반영했습니다.
+
+이번 버전은 Google Drive를 필수 앱으로 바인딩하고, Word/DOCX 대신 SpaceV 로고가 있는 Google Docs 기준 문서를 네이티브 복사해 답변서를 생성하도록 강화한 버전입니다.
+
+관리자에서 아래 확인 부탁드립니다.
+
+1. Workspace settings > Plugins > Marketplaces > SpaceV marketplace > Sync now
+2. spacev-consumer-response Plugin 버전이 1.5.0으로 반영됐는지 확인
+3. Plugin 상세의 Required apps에 Google Drive가 표시되는지 확인
+4. Workspace settings > Apps > Google Drive에서 문서 읽기/복사/편집에 필요한 동작이 허용되어 있는지 확인
+
+Installation policy는 기존처럼 Available로 유지하면 됩니다.

@@ -1,0 +1,33 @@
+{
+  "name": "spacev-consumer-response",
+  "version": "1.5.3",
+  "description": "한국소비자원·1372 등 국내 소비자기관 민원을 판독하고, 빈 마스터 Google Doc `[답변서] 고정 양식`을 고정 document ID로 네이티브 복사해 사건별 내용만 채운 답변서 링크를 생성합니다.",
+  "author": {
+    "name": "SpaceV"
+  },
+  "skills": "./skills/",
+  "interface": {
+    "displayName": "삼삼엠투 소비자원 답변서",
+    "shortDescription": "고정 빈 Google Docs 양식에 소비자원·1372 답변서를 자동 작성",
+    "longDescription": "공문, 결제 상세 정보, 계약메모 전체를 검토합니다. Drive 검색 없이 `[답변서] 고정 양식`의 고정 document ID를 직접 열어 네이티브 복사하고, 사본의 빈 필드와 2·3항 본문만 현재 사건 값으로 채웁니다. 원본 양식은 수정하지 않으며 로고·표 너비·제목·하단 발신부를 재구성하지 않습니다. Word/DOCX/PDF 또는 Markdown 답변서로 우회하지 않습니다.",
+    "developerName": "SpaceV",
+    "category": "Productivity",
+    "capabilities": [
+      "File analysis",
+      "Google Drive / Docs",
+      "Native Google Docs generation",
+      "Write",
+      "Native Google Drive file copy required"
+    ],
+    "defaultPrompt": [
+      "공문, 결제 상세 정보, 계약메모 전체를 검토해 소비자원 답변서를 작성해줘. 영구 마스터 Google Doc `[답변서] 고정 양식` 문서 ID 1slSv_nu58ITcUz07pm-O1EVcSf1n7v7_viQ93cqaxHo를 Drive 검색 없이 직접 열고 네이티브 복사한 뒤 사본의 빈 필드와 본문만 채워. 원본은 절대 수정하지 말고, 빈 Google Doc을 새로 만들거나 양식을 흉내 내거나 Word/DOCX/PDF/Markdown으로 우회하지 마. 사본 URL 확보 전에는 답변서 본문을 채팅에 출력하지 마. 계약표는 기본적으로 계약기간과 이용상품 두 항목만 사용하고 결제 상세 원문을 그대로 전사해. 내부 CS 용어, 불필요한 보증금·금액 세부·미확인 상태·방어 문장을 제거해. 완성 후 SpaceV 로고, 29pt 중앙 Bold 제목, 447pt 수신인 표, 91.5/362.25pt 계약표, 하단 가로선·발신부가 유지되는지 다시 확인하고 검증된 docs.google.com/document 링크만 제공해.",
+      "공문, 결제 상세 정보, 계약메모 전체를 검토해 1372 민원 회신을 작성해줘. 영구 마스터 Google Doc `[답변서] 고정 양식` 문서 ID 1slSv_nu58ITcUz07pm-O1EVcSf1n7v7_viQ93cqaxHo를 Drive 검색 없이 직접 열고 네이티브 복사한 뒤 사본의 빈 필드와 본문만 채워. 원본은 절대 수정하지 말고, 빈 Google Doc을 새로 만들거나 양식을 흉내 내거나 Word/DOCX/PDF/Markdown으로 우회하지 마. 사본 URL 확보 전에는 답변서 본문을 채팅에 출력하지 마. 계약표는 기본적으로 계약기간과 이용상품 두 항목만 사용하고 결제 상세 원문을 그대로 전사해. 내부 CS 용어, 불필요한 보증금·금액 세부·미확인 상태·방어 문장을 제거해. 완성 후 SpaceV 로고, 29pt 중앙 Bold 제목, 447pt 수신인 표, 91.5/362.25pt 계약표, 하단 가로선·발신부가 유지되는지 다시 확인하고 검증된 docs.google.com/document 링크만 제공해.",
+      "소보원 답변서를 작성해줘. `[답변서] 고정 양식` ID 1slSv_nu58ITcUz07pm-O1EVcSf1n7v7_viQ93cqaxHo를 네이티브 복사해서 사본만 채우고, copy/edit가 안 되면 다른 형식으로 만들지 말고 중단해."
+    ],
+    "brandColor": "#2EC9B0",
+    "composerIcon": "./assets/icon.svg",
+    "logo": "./assets/icon.svg"
+  },
+  "repository": "https://github.com/spacev-team/spacev-consumer-response",
+  "apps": "./.app.json"
+}

@@ -1,0 +1,4 @@
+__pycache__/
+*.pyc
+skills/consumer-agency-response/tests/output/
+skills/consumer-agency-response/tests/rendered/

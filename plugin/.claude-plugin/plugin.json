@@ -1,0 +1,8 @@
+{
+  "name": "spacev-consumer-response",
+  "version": "1.5.3",
+  "description": "한국소비자원·1372 민원을 빈 마스터 Google Doc `[답변서] 고정 양식`의 네이티브 사본에 채워 답변서 링크만 작성·검수합니다.",
+  "author": {
+    "name": "SpaceV"
+  }
+}

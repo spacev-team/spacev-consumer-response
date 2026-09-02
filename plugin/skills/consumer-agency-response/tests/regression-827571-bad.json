@@ -1,0 +1,40 @@
+{
+  "recipient": "OOO",
+  "title": "임대목적물 이용 관련 민원 접수 건에 대한 회신",
+  "contract_period": "2026-08-17 ~ 2026-08-30 (2주)",
+  "product_name": "특가 외대2분 풀옵",
+  "section2_paragraphs": [
+    "민원인은 이용대금 전액 반환을 요청하였습니다. 보증금 330,000원은 이미 반환되었습니다.",
+    "이용대금 410,000원은 임대료 360,000원, 관리비 20,000원, 청소비 30,000원으로 구성됩니다.",
+    "제공된 기록에서는 냉장실 조치 완료 기록이 확인되지 않습니다."
+  ],
+  "section3_paragraphs": [
+    "당사는 임대인에게 반환 협의를 요청하였습니다.",
+    "임대인은 민원을 넣지 않으면 전액 반환도 가능하다고 설명하였습니다.",
+    "전대차동의서가 제출되지 않아 무단 전대 여부가 확인되지 않았습니다."
+  ],
+  "money_guard": {
+    "spacev_usage_fee_refund": {
+      "authorized": false,
+      "amount_krw": null,
+      "status": "not_authorized"
+    },
+    "landlord_refund": {
+      "status": "proposed",
+      "amount_krw": 205000
+    },
+    "company_actions": []
+  },
+  "content_guard": {
+    "deposit_relevant": false,
+    "payment_breakdown_relevant": false,
+    "evidence_gap_material": false,
+    "risk_detail_level": "brief",
+    "suppress_conditional_landlord_statements": true
+  },
+  "contract_source": {
+    "type": "payment_detail",
+    "confirmed": true,
+    "raw_excerpt": "계약기간\n2026-08-17 ~ 2026-08-30 (2주)\n이용상품\n특가 외대2분 풀옵"
+  }
+}
