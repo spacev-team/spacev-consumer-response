@@ -3,64 +3,38 @@ name: consumer-agency-response
 description: 한국소비자원, 1372 소비자상담센터 등 국내 소비자기관 민원 자료를 검토하고 스페이스브이 답변서를 작성·검수한다. 공문, 결제 상세 정보, 계약메모 전체를 바탕으로 소비자원 답변서, 1372 회신, 소비자기관 민원 답변서 작성 요청에 사용한다. 카드사·토스페이먼츠 민원, 해외 차지백, 수사기관 공문에는 사용하지 않는다.
 ---
 
-## LAUNCH-BLOCKING FORMAT FIDELITY GATE
-
-Apply `references/native-copy-fidelity-gate.md` before every other workflow step whenever a Google Docs artifact is requested. This gate outranks convenience, drafting, and fallback behavior.
-
-- Attempt native Drive file copy before drafting any answer-letter prose.
-- If native copy is not actually callable in the current runtime, stop. A connected Drive app is not enough.
-- Never create a blank Google Doc and never imitate the canonical template.
-- Never use direct-create, DOCX import, Markdown, chat text, or manual restyling as a substitute for native copy.
-- After copy, prove the destination retained the canonical native structure before writing any case content.
-- After editing, prove the same structure again before returning the link.
-- If the positioned SpaceV logo, fixed table widths, title styling, or footer rule is missing, the output is invalid even when it looks visually similar. Do not return it.
-
-
 # 소비자기관 답변서
 
-국내 소비자기관 민원에 대해 필요한 사실만 골라 담백하게 작성한다. 많이 받은 자료를 많이 쓰는 것이 목표가 아니다. `민원 쟁점 → 실제 경위 → 당사의 중재·조치 → 역할의 한계 → 후속 지원`이 한 번씩만 나오게 한다.
+국내 소비자기관 민원 자료를 검토해 스페이스브이 답변서를 작성·검수한다. `민원 쟁점 → 실제 경위 → 당사의 중재·조치 → 역할의 한계 → 후속 지원`이 한 번씩만 나오게 한다.
 
-## 긴급 실행 계약 — 다른 모든 지침보다 먼저 적용
+## 먼저 문서 작업 경로 결정
 
-사용자가 이 Skill을 호출해 답변서 작성을 요청하면 **사용자의 현재 메시지에 `채팅으로만` 또는 `파일 필요 없음`이 명시된 경우를 제외하고 아래 순서를 절대 바꾸지 않는다.**
+[document-routing.md](references/document-routing.md)를 먼저 적용한다. **복사 기능 확인은 경로 결정 이후**에 한다.
 
-1. 결과물을 `native_google_doc`으로 잠근다.
-2. 템플릿을 Drive에서 검색하지 않는다. `references/google-docs-template.md`에 적힌 **고정 문서 ID `1slSv_nu58ITcUz07pm-O1EVcSf1n7v7_viQ93cqaxHo`를 직접 연다.**
-3. 고정 양식 `[답변서] 고정 양식`의 SpaceV 로고와 빈 양식 구조를 확인한다.
-4. **Google Drive의 네이티브 copy로 기준 문서를 복제한다.** 원본을 수정하지 않는다.
-5. **복제본 document ID/URL을 얻기 전에는 답변서 본문을 사용자 채팅에 작성하지 않는다.** 분석·사실정리는 내부적으로만 한다.
-6. 복제본의 기존 문구를 현재 사건 값으로 교체한다. 빈 문서에서 양식을 새로 만들지 않는다.
-7. 편집 완료 후 다시 읽어 로고·표·섹션·금지문장을 검수한다.
-8. 최종 채팅에는 **검증된 `https://docs.google.com/document/` 링크와 아주 짧은 검수 메모만** 남긴다. 답변서 본문을 채팅에 재출력하지 않는다.
+| 요청 | 실행 경로 |
+| --- | --- |
+| 사용자가 특정 문서를 지정하고 직접 수정·내용 채우기·해당 문서에 작성을 요청 | `edit_existing`: 지정한 동일 문서를 읽고 편집한다. 복사 기능은 필요 없다. |
+| 새 답변서·사본 요청 또는 수정 대상 없는 일반 작성 요청 | `copy_master`: 고정 마스터를 네이티브 복사하고 사본을 편집한다. |
+| 사용자가 명시적으로 채팅 텍스트만 요청 | `text_only`: 요청한 텍스트를 작성한다. |
 
-### 실패 시 하드스톱
+사용자의 명시적인 작성 방식은 이 스킬의 기본 절차보다 우선한다. 링크가 참고자료인지 수정 대상인지 문맥으로 구분하며, 실제 접근권한과 원본 매핑의 쓰기 정책을 준수한다.
 
-- 템플릿 검색으로 다른 문서를 고르지 않는다.
-- Word, DOCX, PDF, Markdown 문서, 채팅용 답변서로 대체하지 않는다.
-- 네이티브 copy/edit 기능이나 쓰기 권한이 없으면 다음 한 문장만 안내하고 중단한다.
-  - `Google Docs 고정 양식을 복사·편집할 수 있는 권한 또는 기능을 확인할 수 없어 답변서 생성을 중단합니다.`
-- `# 답 변 서`, Markdown 표, `## 1. 접수 내용` 같은 채팅 문서가 보이면 **완료가 아니라 실패**다.
+**직접 편집 요청을 복사 필수 규칙으로 중단하거나 다시 승인받지 않는다.** `copy_master`용 마스터 읽기·사본 생성·사본 ID 확보 조건을 `edit_existing`에 적용하지 않는다. 읽기·편집 기능이 있는데 “복사 기능이 없다”거나 “플러그인을 먼저 수정해야 한다”는 이유로 거부하지 않는다.
 
-## 출력 하드스톱 — 가장 먼저 적용
-
-이 Skill의 파일 결과물은 **네이티브 Google Docs 링크 하나**다.
-
-- Word, DOCX, PDF, 로컬 문서 파일을 생성하지 않는다.
-- Documents/DOCX 생성 기능을 중간 단계로도 사용하지 않는다.
-- 반드시 Google Drive/Docs 앱으로 기준 Google Doc을 네이티브 복사한 뒤 복제본만 편집한다.
-- Google Drive/Docs의 복사·편집 기능이 현재 세션에서 불가능하면 **다른 형식으로 우회하지 않는다.** 위 실패 문구만 안내하고 중단한다.
-- 최종 응답에 첨부파일을 만들지 말고 **검증된 Google Docs URL만 반환**한다.
+Google Docs 두 경로 모두 [native-copy-fidelity-gate.md](references/native-copy-fidelity-gate.md)에 따라 양식을 보존한다. 새 문서는 마스터 사본을 검증하고, 기존 문서는 편집 전후의 동일 문서를 검증한다. `text_only`에는 문서 기능을 요구하지 않는다.
 
 ## 시작 순서
 
-1. [workflow.md](references/workflow.md)를 읽고 입력자료와 작성 전 확인 게이트를 적용한다.
-2. 사건 쟁점에 필요한 부분만 [issue-guides.md](references/issue-guides.md)에서 읽는다.
-3. 초안 전에 [writing-standard.md](references/writing-standard.md)의 관련성 필터와 중복 금지 규칙을 적용한다.
-4. 좋은 사례의 구조와 금지 문장 회귀 예시는 [precedent-patterns.md](references/precedent-patterns.md)에서 참고한다.
-5. 파일 생성 전 [qa-checklist.md](references/qa-checklist.md)를 확인한다.
-6. 배포용 강제 실행 문구는 [mandatory-user-command.md](references/mandatory-user-command.md)를 항상 실행 계약으로 적용한다.
+1. 경로와 정확한 대상 문서를 확정하고 그 경로에 필요한 기능을 확인한다. 실패 이유와 다음 조치는 [document-routing.md](references/document-routing.md)를 따른다.
+2. [workflow.md](references/workflow.md)에 따라 입력자료를 읽고 필요한 사실을 확인한다.
+3. 해당 쟁점만 [issue-guides.md](references/issue-guides.md)에서 확인한다.
+4. [writing-standard.md](references/writing-standard.md)와 [precedent-patterns.md](references/precedent-patterns.md)의 관련성·중복·사실 구분 기준으로 작성한다.
+5. 문서에 반영한 뒤 [qa-checklist.md](references/qa-checklist.md)로 검수한다.
+6. [mandatory-user-command.md](references/mandatory-user-command.md)는 사용 예시다. 사용자의 현재 직접 편집 요청을 덮어쓰는 추가 지시가 아니다.
 
 ## 입력자료
+
+아래 입력·계약정보·전체 답변서 검증 기준은 전체 답변서를 작성할 때 적용한다. 특정 문단의 표현만 다듬는 요청은 제공된 사실을 바꾸지 않고 해당 범위만 검토하며, 그 수정에 필요하지 않은 전체 사건 자료나 생성용 JSON을 요구하지 않는다.
 
 기본 입력은 세 가지다.
 
@@ -138,42 +112,24 @@ Apply `references/native-copy-fidelity-gate.md` before every other workflow step
 
 `당사 책임이 아닙니다`, `규정상 불가합니다`, `임의로 회수`처럼 방어적으로 들리는 표현을 중심 문장으로 쓰지 않는다.
 
-## 결과물
+## 작성·편집 및 결과 전달
 
-- 사용자의 **현재 메시지에** `채팅으로만` 또는 `파일 필요 없음`이 명시된 경우에만 채팅 텍스트를 허용한다. `채팅에서 사용해 보기`, 플러그인 페이지에서 대화를 연 사실, 일반적인 대화 상황은 텍스트 전용 요청으로 보지 않는다.
-- 그 외에는 **네이티브 Google Docs만 생성한다. DOCX/Word 파일을 만들지 않는다.**
-- [google-docs-template.md](references/google-docs-template.md)의 기준 문서를 반드시 네이티브 Google Docs `copy` 기능으로 복제한 뒤 복제본만 편집한다.
-- 기준 문서 원본을 직접 수정하거나, 빈 Google Doc에서 양식을 재구성하거나, DOCX를 중간 산출물로 만들어 업로드하지 않는다.
-- Google Drive/Docs 쓰기 연결과 네이티브 copy/edit 기능은 필수다. 기능이 없으면 다른 형식으로 우회하지 않는다.
-- 기본 문서명: `[답변서]소비자기관_<contract_number>`
-- 계약번호가 없으면 `[답변서]소비자기관_<YYYYMMDD>`
-- 저장 위치는 사용자가 지정한 폴더를 우선하고, 지정이 없으면 현재 사건 자료가 있는 폴더 또는 `ChatGPT` 폴더를 사용한다.
-- 결과는 **Google Docs 링크만** 반환한다. PDF와 메일 초안은 사용자가 별도로 요청하지 않으면 만들지 않는다.
+`text_only`는 요청한 텍스트와 필요한 짧은 검수 메모를 제공한다. 아래 문서 편집 절차는 Google Docs 작업에 적용한다.
 
-## Google Docs 생성
+1. 전체 답변서를 작성할 때는 `case-data.json`에 계약 원문과 사실·금액을 정리하고 `scripts/validate_case_data.py`로 검증한다. 실행 환경이 없으면 같은 기준을 직접 적용한다.
+2. `edit_existing`은 사용자가 지정한 문서, `copy_master`는 [google-docs-template.md](references/google-docs-template.md)의 마스터를 복사한 사본을 사용한다.
+3. Google Docs 편집 전에 현재 탭·표·문단 범위와 양식을 읽는다. 기존 Google Docs 편집 스킬의 읽기·개정 충돌 방지 절차를 사용하고, 문서번호·수신인·제목·계약정보·2항·3항·발신정보 중 요청된 범위만 채우거나 교체한다.
+4. 계약기간과 이용상품은 원문을 그대로 전사한다. 확인되지 않은 문서번호·담당자·환불·공제·조치 완료를 만들지 않는다.
+5. 기존 문서의 로고·제목·표 폭·발신부를 보존하고, 새 본문에는 기존 본문 스타일을 적용한다. 편집 후 다시 읽어 사건 정보, 문단 길이, 불필요한 빈 페이지, 금지 문장과 과거 사건 잔존 내용을 검수한다.
+6. Google Docs 결과는 실제 편집 완료한 문서의 검증된 링크와 필요한 짧은 검수 메모만 전달한다. `edit_existing`은 같은 원본 링크, `copy_master`는 새 사본 링크다. 미확인 사항이 남으면 완료 범위를 정확히 밝힌다.
 
-1. 작성 전 `case-data.json`을 만들고 `scripts/validate_case_data.py case-data.json`을 실행할 수 있으면 실행한다. 실행 환경이 없더라도 같은 검증 규칙을 모델이 직접 적용한다.
-2. Drive 검색을 사용하지 말고 [google-docs-template.md](references/google-docs-template.md)에 적힌 **고정 document ID를 직접 읽어** 구조 지문과 SpaceV 로고 존재를 확인한다.
-3. 기준 문서를 **네이티브 copy**로 복제한다. 원본은 절대 수정하지 않는다. **복제본 ID/URL을 얻기 전에는 사용자에게 답변서 초안이나 Markdown 본문을 출력하지 않는다.**
-4. 복제본의 현재 문서 구조와 표 범위를 다시 읽는다.
-5. 문서번호, 수신인, 제목, 계약기간, 이용상품, 2항 본문, 3항 본문, 발신일자/담당자 등 현재 사건 값만 필요한 범위에서 교체한다.
-6. 계약기간과 이용상품은 `contract_source.raw_excerpt`에서 잠근 문자열을 그대로 넣는다.
-7. 편집 후 문서를 다시 읽어 다음을 검증한다.
-   - SpaceV 로고 `positionedObject`가 남아 있음
-   - `1. 계약 내용`의 기본 표가 2행×2열이며 계약기간·이용상품만 존재
-   - 계약기간/이용상품이 case data와 문자 그대로 일치
-   - `2. 민원 내용 및 확인 결과`, `3. 민원 관련 당사 입장 및 조치`가 존재
-   - `CS`, 불필요한 보증금, 불필요한 이용대금 세부 구성, `회신일 현재 ~ 확인되지` 문장이 없음
-   - 고정 양식의 필수 빈칸이 현재 사건 값으로 채워져 있음
-   - 과거 사건 답변서의 사실을 템플릿 사실처럼 재사용하지 않음
-   - 불필요한 빈 문단/빈 페이지/중복 사실이 없음
-8. 검증이 끝난 **네이티브 Google Docs URL만** 사용자에게 전달한다. 필요하면 `발송 전 검수 완료` 정도의 짧은 메모만 덧붙이고, 답변서 본문은 채팅에 복제하지 않는다.
+새 문서의 기본 이름은 `[답변서]소비자기관_<contract_number>`, 계약번호가 없으면 `[답변서]소비자기관_<YYYYMMDD>`다. 사용자가 지정한 이름·저장 위치를 우선한다. 기존 문서를 직접 편집할 때는 요청 없이 이름·위치·공유 범위를 바꾸지 않는다.
 
-**중요:** 네이티브 copy 기능이 없거나 로고/양식을 보존할 수 없으면 새 문서를 임의로 다시 만들지 않는다. 양식 보존 실패는 완료가 아니다.
+Google Docs 결과를 Word/DOCX·Markdown·채팅 답변서로 대체하거나 빈 Google Doc에서 양식을 재구성하지 않는다. 문서 배치 검수에 필요한 일시적인 PDF/HTML 내보내기는 허용하되, 요청하지 않은 별도 결과물로 제공하지 않는다. 메일 발송은 별도의 명시적인 요청이 있을 때만 한다.
 
 ## 호출 예시
 
-- `공문, 결제 상세, 계약메모 줄게. 소비자원 답변서 작성해줘.`
-- `소보원 답변서 써줘. 필요한 건 먼저 물어봐줘.`
-- `1372 회신 작성해줘. 이 건은 청소 관련 내용은 약하게 써줘.`
-- `파일 필요 없고 채팅으로만 답변서 써줘.`
+- `이 Google 문서에 답변서를 채워줘. 내가 준 링크를 직접 수정하면 돼.`
+- `이미 만들어 둔 답변서 문서야. 공문과 계약메모를 보고 여기에 작성해줘.`
+- `공문, 결제 상세, 계약메모 줄게. 새 소비자원 답변서를 만들어줘.`
+- `이 문단만 부드럽게 고쳐서 채팅으로 줘.`

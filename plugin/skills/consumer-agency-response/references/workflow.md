@@ -1,18 +1,14 @@
 # 처리 절차와 고정 골조
 
-## 0. 결과물 경로 잠금
+## 0. 작업 경로와 대상 확정
 
-파일 생성 요청이면 가장 먼저 결과물을 **네이티브 Google Docs**로 잠근다. 이 단계가 본문 초안보다 먼저다.
+[document-routing.md](document-routing.md)를 먼저 적용한다.
 
-- Word/DOCX/PDF/Markdown 문서 생성 금지
-- 채팅에 완성형 답변서 본문을 먼저 쓰는 것 금지
-- DOCX를 만든 뒤 Drive에 올리는 방식 금지
-- **Drive에서 템플릿 검색 금지**
-- `1slSv_nu58ITcUz07pm-O1EVcSf1n7v7_viQ93cqaxHo` 문서 ID를 직접 읽는다.
-- Google Docs 기준 문서 네이티브 복사 → 복제본 편집만 허용
-- **복제본 ID/URL을 얻은 후에만 답변서 본문을 작성하여 문서에 넣는다.**
-- copy/edit 권한 또는 기능이 없으면 파일 생성 중단. 다른 문서나 채팅 초안으로 우회하지 않는다.
-- 최종 응답은 Google Docs URL만 반환
+- `edit_existing`: 사용자가 직접 수정하도록 지정한 동일 Google 문서를 읽고 편집한다. copy/create 기능, 마스터 열람, 이번 대화에서 생성한 사본을 요구하지 않는다.
+- `copy_master`: [google-docs-template.md](google-docs-template.md)의 영구 마스터를 네이티브 복사하고 사본을 편집한다. 이 경로에만 복사 기능과 사본 ID 확보가 필요하다.
+- `text_only`: 명시적인 채팅 텍스트 요청을 따른다.
+
+대상과 필요한 기능을 확인한 뒤 [native-copy-fidelity-gate.md](native-copy-fidelity-gate.md)의 해당 경로 검수를 적용한다. 입력자료 분석은 내부적으로 진행할 수 있으나 Google Docs 결과를 요청한 경우 완성 답변서를 채팅으로 대신 제공하지 않는다.
 
 ## 1. 입력자료 확인
 
@@ -162,23 +158,15 @@
 - `당사가 전액 반환을 확정할 수는`
 - `회신일 현재 ... 확인되지 않았습니다` 등 불필요한 미확인 상태
 
-## 9. 결과 전달
+## 9. 편집 및 결과 전달
 
-사용자가 텍스트만 요청하면 채팅으로 답변서와 간단 검수만 제공한다.
+`text_only`는 요청한 텍스트와 필요한 짧은 검수 메모를 제공한다. 아래 문서 읽기·편집·링크 절차는 Google Docs 작업에 적용한다. 특정 문구만 다듬는 경우에는 요청 범위의 사실·문체·보존 기준만 검수한다.
 
-파일 결과는 **네이티브 Google Docs만** 사용한다.
+1. 전체 답변서를 작성할 때는 `case-data.json`을 작성해 계약정보·금액·관련성·문장 가드를 검증한다.
+2. 선택한 경로의 대상 문서에서 현재 문단·표·탭과 양식을 읽고, 기존 필드와 2·3항 본문에 현재 사건 값을 반영한다.
+3. `edit_existing`은 동일 원본의 편집 전후 구조를 비교한다. `copy_master`는 마스터 사본의 구조와 원본 마스터 미변경을 확인한다.
+4. 계약기간·이용상품은 원문과 문자 그대로 일치해야 하며, 과거 사건의 이름·날짜·금액은 현재 사건 사실로 재사용하지 않는다.
+5. 로고·고정 표 폭·제목·하단 가로선과 발신부를 보존한다. 새 본문은 일반 본문 스타일로 작성하고, 문단 3줄 이내와 빈 페이지 유무를 확인한다. 검수를 위한 임시 내보내기는 최종 결과물을 대체하지 않는다.
+6. Google Docs 결과는 `edit_existing`이면 같은 원본 링크, `copy_master`이면 사본 링크를 반환한다.
 
-1. `case-data.json`을 만들고 계약정보·금액·관련성·문장 가드를 검증
-2. Drive 검색 없이 `references/google-docs-template.md`의 고정 document ID를 직접 읽어 SpaceV 로고와 고정 구조를 확인
-3. Google Drive 네이티브 copy 기능으로 기준 문서를 복제하고 **복제본 URL 확보 전에는 사용자 채팅에 본문을 출력하지 않음**
-4. 복제본만 편집하고 원본의 로고·페이지·표·서식 구조는 유지
-5. 현재 사건 값으로 수신인·제목·계약정보·2항·3항·발신정보를 교체
-6. 완성본을 다시 읽어 로고, 2행×2열 계약표, 계약정보 일치, 금지 문장, 템플릿 사건 잔존 여부를 검증
-7. **Google Docs URL만 반환**
-
-DOCX/Word를 생성하거나 업로드하는 fallback은 사용하지 않는다. 네이티브 copy/edit 기능이 없으면 양식을 재작성하지 말고 필요한 Google Drive 권한 또는 기능이 없다고 알린다.
-
-
-## Native-copy fidelity requirement
-
-Before this workflow starts, apply `native-copy-fidelity-gate.md`. Native file copy must succeed and the copied document must pass the structural clone signature before any response prose is drafted. A blank/recreated Google Doc is always a failure.
+접근 오류·동작 미제공·양식 누락은 [document-routing.md](document-routing.md)에 따라 실제 원인만 설명한다. 문서 전체가 아닌 일부만 반영했으면 그 범위를 분명히 한다.

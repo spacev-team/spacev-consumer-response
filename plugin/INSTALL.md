@@ -1,34 +1,29 @@
-# SpaceV Consumer Response Plugin v1.5.0
+# SpaceV Consumer Response Plugin v1.5.4
 
-## 필수 조건
+## 필요한 연결
 
-- ChatGPT 워크스페이스에서 Plugins 사용 가능
-- **Google Drive 앱 사용 가능**
-- Google Docs 문서 읽기/복사/편집 권한 가능
-- 기준 템플릿 문서에 접근 가능
+- ChatGPT 워크스페이스에서 플러그인 사용 가능
+- Google Drive 앱 연결 및 대상 문서의 현재 내용 읽기·편집 가능
+- 새 답변서 생성 시에만 마스터 읽기와 네이티브 복사 기능 추가 필요
 
-이 버전은 `plugin/.app.json`에서 Google Drive 앱을 플러그인에 바인딩한다.
-
-## 관리자 설정
-
-1. Workspace settings > Plugins에서 `spacev-consumer-response`를 `Available`로 설정
-2. Plugin 상세에서 **Required apps: Google Drive**가 표시되는지 확인
-3. Workspace settings > Apps > Google Drive에서 대상 사용자가 Google Drive를 사용할 수 있게 설정
-4. Google Drive의 문서 복사/생성/편집에 필요한 쓰기 동작을 허용
-5. 업데이트 직후에는 `Workspace settings > Plugins > Marketplaces > 해당 marketplace > Sync now` 실행
+`plugin/.app.json`의 Google Drive 연결을 유지합니다. 앱 연결만으로 모든 동작이나 모든 문서의 접근권한이 확보되는 것은 아닙니다.
 
 ## 사용
 
-공문/민원 접수 내용 + 결제 상세 정보 + 계약메모 전체를 첨부한 뒤:
+공문·결제 상세·계약메모와 준비된 Google 문서를 첨부한 뒤:
 
-`소보원 답변서 작성해줘.`
+> 소보원 답변서를 작성해줘. 내가 준 링크를 직접 수정하면 돼.
 
-정상 결과는 **SpaceV 로고가 포함된 네이티브 Google Docs 링크**다.
+지정한 같은 문서에 작성하고 같은 링크를 반환합니다. 이미 명시한 직접 편집에 재승인을 요구하거나 복사 기능 부재를 이유로 중단하지 않습니다.
 
-다음 결과는 실패로 본다.
+새 문서가 필요하면:
 
-- Word/DOCX/PDF 파일 생성
-- Google Docs 양식을 빈 문서에서 재구성
-- `CS 지원금`, `CS 보상` 같은 내부 용어 사용
-- 쟁점과 무관한 이용대금 세부 구성 나열
-- 불필요한 `회신일 현재 ~ 확인되지 않았습니다` 상태 문장
+> 고정 마스터를 복사해 새 소비자원 답변서를 만들어줘.
+
+이 경우에는 마스터의 네이티브 사본을 생성합니다. 복사 기능이 없으면 준비된 작업 문서의 직접 편집 경로를 안내합니다.
+
+## 배포 확인
+
+상위 `UPDATE_DEPLOY.md`에 따라 Marketplace 업데이트를 반영하고 실제 플러그인 버전이 `1.5.4`인지 확인한 뒤 새 대화에서 사용합니다. 저장소 수정만으로 모든 직원의 설치본이 갱신됐다고 안내하지 않습니다.
+
+Google Docs 요청을 Word·Markdown·채팅 답변서로 대체하거나 빈 문서에서 양식을 재구성하지 않습니다. 명시적인 텍스트 요청은 별도 경로로 처리하며, 문서 검수용 임시 내보내기는 최종 결과물을 대체하지 않습니다.

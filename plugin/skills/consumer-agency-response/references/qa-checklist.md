@@ -1,5 +1,7 @@
 # 발송 전 검수표
 
+전체 답변서는 아래 항목을 검수한다. 특정 문단만 다듬는 요청은 해당 범위의 사실·문체·보존 항목만 적용한다. `text_only`에는 Google Docs 읽기·양식·링크 항목을 적용하지 않는다.
+
 ## 입력과 질문
 
 - [ ] 공문 또는 민원 접수 내용, 결제 상세 정보, 계약메모 전체를 확인함
@@ -28,22 +30,31 @@
 - [ ] 새 환불·보상·책임 인정을 만들어내지 않음
 - [ ] 금지 용어가 없음
 
+## 작업 경로
+
+- [ ] 직접 수정 요청·새 문서 요청·텍스트 요청을 문맥으로 구분함
+- [ ] 직접 편집에서 복사 기능·마스터 열람·사본 생성 이력을 요구하지 않음
+- [ ] 이미 허용된 직접 편집에 재승인을 요청하지 않음
+- [ ] 실제 접근권한과 원본 매핑의 쓰기 정책을 따름
+- [ ] 실패한 경우 읽기/편집/복사/양식 중 실제 원인을 정확히 설명함
+- [ ] 지정 원본의 현재 내용을 읽고 개정 충돌 및 범위 밖 내용을 보호함
+
 ## 형식 및 산출물
 
 - [ ] 2항은 2~5개 짧은 문단
 - [ ] 3항은 2~4개 짧은 문단이며 억지로 문단 수를 채우지 않음
 - [ ] 각 문단이 렌더링 결과 3줄 이내
-- [ ] 네이티브 Google Docs 기준 템플릿을 copy하여 만들었고 원본은 수정하지 않음
+- [ ] `edit_existing`은 지정한 동일 문서를 편집했고, `copy_master`는 마스터 사본을 편집함
 - [ ] 우측 상단 SpaceV 로고 positionedObject가 유지됨
 - [ ] 계약 표가 기본 2행×2열이며 계약기간·이용상품만 있음
 - [ ] 계약기간·이용상품이 잠근 원문 값과 문자 그대로 일치함
 - [ ] 고정 양식의 빈 필드(수신인 `담당자님` 단독, 빈 계약기간/이용상품 등)가 필요한 곳에 남아 있지 않음
 - [ ] 과거 사건 답변서의 이름·날짜·금액·문구를 템플릿 사실처럼 재사용하지 않음
 - [ ] 문단·표·페이지 구조가 깨지지 않았고 불필요한 빈 문단/빈 페이지가 없음
-- [ ] **DOCX/Word/PDF 파일을 만들지 않았음**
-- [ ] **최종 결과는 네이티브 Google Docs URL임**
+- [ ] **Google Docs 결과를 DOCX/Word/PDF로 대체하지 않았음(검수용 임시 내보내기 제외)**
+- [ ] **Google Docs 작업의 최종 결과는 실제 편집한 문서의 검증된 URL임**
 
-사용자에게는 아래 정도로만 요약한다.
+Google Docs 작업은 사용자에게 아래 정도로만 요약한다.
 
 ```markdown
 **발송 전 검수**
@@ -55,6 +66,5 @@
 ```
 
 
-## Native-copy fidelity requirement
 
-Before this workflow starts, apply `native-copy-fidelity-gate.md`. Native file copy must succeed and the copied document must pass the structural clone signature before any response prose is drafted. A blank/recreated Google Doc is always a failure.
+경로 선택은 [document-routing.md](document-routing.md), 양식 보존 검수는 [native-copy-fidelity-gate.md](native-copy-fidelity-gate.md)를 따른다. 텍스트 요청에는 Google Docs 문서 검수를 요구하지 않는다.

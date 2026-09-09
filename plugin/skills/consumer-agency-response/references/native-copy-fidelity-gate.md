@@ -1,68 +1,53 @@
-# Native Copy Fidelity Gate
+# Google Docs 양식 보존 검수
 
-This gate is launch-blocking. The canonical source is the blank native Google Doc `[답변서] 고정 양식`, document ID `1slSv_nu58ITcUz07pm-O1EVcSf1n7v7_viQ93cqaxHo`.
+먼저 [document-routing.md](document-routing.md)로 작업 경로를 정한다. 이 파일의 이름에 `copy`가 있더라도 **기존 문서 직접 편집에 복사를 요구하지 않는다.** `text_only`에는 이 문서 검수가 적용되지 않는다.
 
-## 1. Preflight before drafting
+## 편집 전: 경로별 확인
 
-Before drafting answer-letter prose, resolve and call a native Google Drive file-copy action for the canonical template document. A connected Google Drive app by itself is not proof that native copy is available.
+### `edit_existing`
 
-Required runtime capabilities:
+- 사용자가 직접 편집하도록 지정한 정확한 document ID를 사용한다.
+- 그 문서의 현재 탭·로고·제목·표·발신부를 읽고 편집 전 기준으로 기록한다.
+- 로고와 공식 양식이 있는 작업 문서는 그대로 채우거나 수정할 수 있다. 필드가 이미 채워져 있거나 문서가 이번 대화에서 복제되지 않았다는 이유로 거부하지 않는다.
+- 네이티브 복사 동작, 사본 생성 이력, 원래의 빈 셀, 고정 마스터 접근을 선행 조건으로 삼지 않는다.
+- 여러 탭이 있으면 요청 범위와 무관한 탭을 보존한다. 새 마스터 사본의 단일 탭 조건을 기존 문서 전체에 강제하지 않는다.
 
-- Read the exact canonical Google Doc by document ID.
-- Copy that Drive file natively.
-- Read the copied Google Doc structure.
-- Edit the copied Google Doc.
+### `copy_master`
 
-If native file copy is unavailable, stop. Do not create a blank Google Doc, use Google Docs direct-create, import DOCX, emit Markdown, or write a full answer letter in chat as a substitute.
+- [google-docs-template.md](google-docs-template.md)의 고정 ID로 영구 마스터를 읽고 실제 네이티브 복사를 실행한다.
+- 새 document ID가 마스터와 다른지 확인한다.
+- 단일 탭과 빈 계약 값 셀 등 마스터의 기존 구조가 사본에 유지되는지 확인한 뒤 사건 내용을 채운다.
+- 복사가 불가능한 경우의 안내는 [document-routing.md](document-routing.md)를 따른다. 임의의 새 빈 문서나 다른 사건 답변서로 대체하지 않는다.
 
-## 2. Prove the destination is a real native clone
+## 공통 양식 확인
 
-Immediately after native copy and before case-content mutation, verify all of the following.
+사건 답변서를 채울 영역에서 다음 요소를 확인하고 편집 전후에 보존한다.
 
-- Destination document ID differs from `1slSv_nu58ITcUz07pm-O1EVcSf1n7v7_viQ93cqaxHo`.
-- Exactly one document tab is present.
-- `positionedObjects` is non-empty.
-- SpaceV logo is a positioned image using `BEHIND_TEXT`, approximately 64.33pt wide and 19.87pt high.
-- First document paragraph references the positioned logo object.
-- `답 변 서` is centered, bold, and 29pt.
-- Recipient area is a 1x1 table with a fixed width of approximately 447pt.
-- Contract table is 2x2 with fixed widths of approximately 91.5pt and 362.25pt.
-- Contract value cells are initially blank before current-case values are inserted.
-- A horizontal rule exists immediately before the sender block.
-- Sender block keeps 10pt field text, bold field labels, gray separators, and the email hyperlink.
+- 우측 상단 SpaceV 로고가 `positionedObjects`에 존재한다.
+- 로고는 `BEHIND_TEXT`, 크기 약 `64.33pt × 19.87pt`이며 첫 문단이 해당 객체를 참조한다.
+- `답 변 서` 제목은 가운데 정렬, Bold, 29pt다. `namedStyleType` 값만으로 판정하지 말고 실제 문단·텍스트 스타일을 확인한다.
+- 수신인 표는 1행×1열, 고정 너비 약 447pt다.
+- 기본 계약 표는 계약기간·이용상품의 2행×2열, 고정 열 너비 약 91.5pt/362.25pt다. 사용자가 승인한 추가 항목이 있으면 그 승인 범위를 따른다.
+- `1. 계약 내용`, `2. 민원 내용 및 확인 결과`, `3. 민원 관련 당사 입장 및 조치`의 순서가 유지된다.
+- 하단 발신부 앞에 가로선이 있으며, 10pt 필드 텍스트·Bold 필드명·회색 구분자·이메일 링크가 유지된다.
 
-If any invariant is missing, treat the file as a reconstructed imitation, not a clone. Do not repair or redraw the template; stop instead.
+필수 요소가 없으면 실제 누락 항목을 설명한다. 눈대중으로 로고나 표를 다시 그려 공식 양식이라고 주장하지 않는다. 명시적인 양식 보수·변경 요청은 별도의 작업 범위로 다룬다.
 
-## 3. Mutation policy
+## 편집 범위
 
-Only change current-case text inside the copied document.
+- 기존 문서의 필드·본문을 채우거나 요청 범위의 현재 사건 값으로 교체한다. 모든 문서를 무조건 비워서 다시 작성하지 않는다.
+- 새 일반 문장은 기존 본문 스타일(기본 Arial 11pt, 검정, Bold 아님)을 따른다. 제목의 Bold가 본문에 그대로 번지지 않게 한다.
+- 로고 객체, 표 구조·폭, 페이지 크기·여백, 제목과 발신부 구조를 재구성하지 않는다.
+- 본문 문단 분리와 불필요한 빈 문단 제거는 허용한다. 내용을 줄이기 위해 필요한 사실을 누락하거나 서식을 무리하게 축소하지 않는다.
+- 영구 마스터 자체에는 사건 내용을 쓰지 않는다.
 
-- Fill the existing blank document-number, recipient, contract-period, product-name, sender-date, and handler fields.
-- Insert section 2 body immediately after `2. 민원 내용 및 확인 결과`.
-- Insert section 3 body immediately after `3. 민원 관련 당사 입장 및 조치`.
-- Apply normal body styling to inserted prose; do not overwrite heading styles.
-- Do not recreate tables, images, page layout, paragraph widths, borders, or the footer structure.
-- Never write to the canonical master document.
+## 편집 후 확인
 
-## 4. Final fidelity verification
+1. 동일 대상 문서를 다시 읽어 요청 내용과 계약 원문, 양식 요소를 확인한다.
+2. `edit_existing`의 최종 ID는 사용자가 지정한 ID와 같아야 한다.
+3. `copy_master`의 최종 ID는 이번에 만든 사본 ID여야 하며 마스터 ID와 달라야 한다.
+4. 수정 범위 밖의 탭·내용과 다른 사람의 변경을 보존한다. 과거 사건 값은 현재 사건 사실로 재사용하지 않는다.
+5. 한 문단 3줄 이내, 제목과 본문의 구분, 하단 발신부, 불필요한 빈 페이지를 확인한다. 가능하면 임시 PDF 내보내기로 페이지를 확인하되 별도 결과물로 제공하지 않는다.
+6. 확인하지 못한 속성이나 미완료 범위가 있으면 숨기지 말고 검수 메모에 표시한다. 전부 검수하지 않은 문서를 ‘발송 전 검수 완료’로 단정하지 않는다.
 
-After writing, read the native Google Doc again and verify:
-
-- all clone invariants still pass;
-- contract fields match locked source strings exactly;
-- section 2 and 3 contain current-case prose;
-- the master template ID was never edited;
-- no blank-template placeholders that should be filled remain;
-- no forbidden wording or irrelevant facts survived the content QA.
-
-Return the Google Docs URL only after the post-edit check passes.
-
-## Known bad reconstruction signature
-
-Automatic failure:
-
-- `positionedObjects` is null or empty;
-- title is ordinary `NORMAL_TEXT` instead of retained 29pt centered bold title;
-- contract columns are evenly distributed instead of fixed 91.5pt / 362.25pt;
-- footer is plain body text without the original horizontal rule and field styling;
-- document was created from scratch rather than copied from the fixed master.
+검증 후 선택한 경로에 맞는 Google Docs 링크를 반환한다.

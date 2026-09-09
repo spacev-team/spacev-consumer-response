@@ -1,8 +1,23 @@
-# 배포용 강제 명령어
+# 기본 호출 예시
 
-아래 문장은 플러그인 기본 프롬프트와 동일한 실행 계약이다. 사용자가 짧게 요청해도 이 규칙을 내부적으로 적용한다.
+사용자가 실행 규칙을 길게 붙여넣을 필요는 없다. 실제 경로는 [document-routing.md](document-routing.md)에 따라 현재 요청에서 판별한다. 아래 예시는 이미 명시된 직접 편집 요청을 무효화하는 추가 지시가 아니다.
 
-> 공문, 결제 상세 정보, 계약메모 전체를 검토해 소비자원 답변서를 작성해줘. 반드시 고정 Google Docs 템플릿 문서 ID `1slSv_nu58ITcUz07pm-O1EVcSf1n7v7_viQ93cqaxHo`를 직접 열고 네이티브 복사한 뒤 복사본만 편집해. Drive에서 템플릿을 검색하거나 다른 답변서를 고르지 마. 채팅 초안, Markdown 답변서, Word/DOCX/PDF 생성은 금지하고, Google Docs copy/edit가 불가능하면 다른 형식으로 대체하지 말고 중단해. `1. 계약 내용`은 기본적으로 계약기간과 이용상품만 넣고 결제 상세 원문을 그대로 사용해. `CS 지원금`, `CS 보상`은 쓰지 말고 회사의 실제 보상은 `민원인이 이용 과정에서 겪은 불편을 고려하여, 당사는 이용 수수료 ○○원을 현금으로 보상하였습니다.`처럼 풀어 써. 보증금·총 결제금액·세부 이용대금·실제 퇴실일은 민원 쟁점상 꼭 필요하고 사용자가 추가에 동의한 경우가 아니면 넣지 마. `회신일 현재`, 불필요한 `확인되지 않았습니다`, `당사가 보관하고 있지 않습니다`, `임의로 회수`, `전액 반환을 확정할 수 없습니다` 같은 불필요하게 방어적인 문장은 삭제해. 같은 사실은 한 번만 쓰고 한 문단은 1~2문장으로 작성해. 최종 채팅에는 완성된 `docs.google.com/document/` 링크만 제공해.
+## 준비된 문서 직접 편집
 
+> 공문, 결제 상세 정보, 계약메모 전체를 검토해 소비자원 답변서를 작성해줘. 내가 첨부한 Google 문서 링크를 직접 수정하고 기존 로고와 양식을 유지해줘.
 
-Mandatory format rule: before drafting, native-copy the exact canonical Google Doc. Do not direct-create or imitate the template. Verify the copied document retains the positioned SpaceV logo, 29pt centered bold title, 447pt recipient table, 91.5pt/362.25pt contract columns, and footer horizontal rule. If native copy is unavailable or any check fails, stop without returning a document.
+같은 문서의 현재 내용을 읽고 편집한다. copy/create 기능을 요구하거나 복사 없이 편집해도 되는지 다시 묻지 않는다.
+
+## 새 답변서 생성
+
+> 공문, 결제 상세 정보, 계약메모 전체를 검토해 새 소비자원 답변서를 만들어줘. 영구 마스터를 네이티브 복사한 사본에 작성하고 Google Docs 링크로 제공해줘.
+
+이 경로에는 마스터의 네이티브 복사 기능이 필요하다. 사용할 수 없으면 준비된 작업 문서 링크와 직접 편집 요청으로 이어갈 수 있음을 안내한다.
+
+## 텍스트만 요청
+
+> 이 답변서의 3항만 짧고 부드럽게 고쳐서 채팅으로 줘.
+
+요청한 텍스트를 제공한다. Google Docs 읽기·복사·편집 기능을 텍스트 작성의 조건으로 요구하지 않는다.
+
+모든 경로에서 계약기간·이용상품 원문 전사, 확인된 사실·실제 조치만 반영, 임의 환불·보상 금지, 용어와 문단 길이 기준을 유지한다.
