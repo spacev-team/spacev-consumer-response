@@ -9,8 +9,8 @@
   "plugins": [
     {
       "name": "spacev-consumer-response",
-      "description": "국내 소비자기관 민원을 검토하고 빈 마스터 Google Doc `[답변서] 고정 양식`을 네이티브 복사한 뒤 사건별 값만 채워 링크로 생성합니다.",
-      "version": "1.5.3",
+      "description": "국내 소비자기관 민원 자료를 검토하고, 사용자가 직접 편집을 요청한 Google 문서에 작성하거나 고정 마스터의 네이티브 사본으로 새 답변서를 생성합니다.",
+      "version": "1.5.4",
       "author": {
         "name": "SpaceV"
       },
